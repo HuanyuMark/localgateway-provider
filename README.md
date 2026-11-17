@@ -9,22 +9,22 @@ shuts down gracefully.
 
 This repository root is the crate root: `Cargo.toml`, `src/` and `tests/` live
 at the top level, with no nested workspace or crate directory. Current version:
-`0.2.0`.
+`0.2.1`.
 
 ## Dependencies
 
-`localgateway-provider` depends on `localgateway-sdk` v0.2.0 through GitHub git
+`localgateway-provider` depends on `localgateway-sdk` v0.2.1 through GitHub git
 + tag:
 
 ```toml
-localgateway-sdk = { git = "https://github.com/HuanyuMark/localgateway-sdk", tag = "v0.2.0" }
+localgateway-sdk = { git = "https://github.com/HuanyuMark/localgateway-sdk", tag = "v0.2.1" }
 ```
 
 ## Usage
 
 ```toml
 [dependencies]
-localgateway-provider = { git = "https://github.com/HuanyuMark/localgateway-provider", tag = "v0.2.0" }
+localgateway-provider = { git = "https://github.com/HuanyuMark/localgateway-provider", tag = "v0.2.1" }
 ```
 
 ```rust
