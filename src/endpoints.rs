@@ -117,7 +117,6 @@ impl ControlEndpoints {
         let next_base_url = payload
             .get("nextBaseUrl")
             .and_then(Value::as_str)
-            .or_else(|| payload.get("next_base_url").and_then(Value::as_str))
             .map(str::trim)
             .filter(|value| !value.is_empty());
         let Some(next_base_url) = next_base_url else {
@@ -140,5 +139,34 @@ fn error_response(message: String) -> ControlResponse {
     ControlResponse {
         status: 400,
         body: json!({"status": "error", "message": message}),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::health::DefaultHealthCheck;
+
+    fn endpoints() -> ControlEndpoints {
+        ControlEndpoints::new(
+            "demo".to_owned(),
+            "1.0.0".to_owned(),
+            "/health".to_owned(),
+            "/_localgateway/events".to_owned(),
+            GatewayClient::builder()
+                .base_url("http://127.0.0.1:47821")
+                .build(),
+            Arc::new(DefaultHealthCheck::new("demo", "1.0.0")),
+        )
+    }
+
+    #[test]
+    fn restart_notification_requires_camel_case_base_url() {
+        // 网关预通知固定使用 nextBaseUrl；SSE 事件 data 里的 next_base_url
+        // 是另一种载荷，通知端点不应把它当作兼容别名接受。
+        let response = endpoints().handle_notification(
+            br#"{"type":"gateway_restarting","next_base_url":"http://127.0.0.1:47822"}"#,
+        );
+        assert_eq!(response.status, 400, "{}", response.body);
     }
 }
