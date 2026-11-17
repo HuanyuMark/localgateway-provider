@@ -1,0 +1,33 @@
+[package]
+name = "localgateway-provider"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "MIT"
+description = "Lifecycle glue for providers that register themselves with LocalGateway"
+
+[features]
+default = ["axum"]
+# The recommended path: axum business routes plus utoipa/utoipa-axum document
+# collection. Disable default features to use only the framework-neutral
+# lifecycle and `run_with(...)` adapter seam.
+axum = ["dep:axum", "dep:utoipa", "dep:utoipa-axum"]
+
+[dependencies]
+axum = { version = "0.8", optional = true }
+localgateway-sdk = { git = "https://github.com/HuanyuMark/localgateway-sdk", tag = "v0.1.0" }
+serde_json = "1.0"
+thiserror = "2.0"
+tokio = { version = "1", features = ["macros", "net", "rt", "signal", "sync", "time"] }
+utoipa = { version = "=6.0.0", default-features = false, optional = true }
+utoipa-axum = { version = "=0.3.0", optional = true }
+
+[dev-dependencies]
+axum = "0.8"
+reqwest = { version = "0.13", default-features = false, features = ["json"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+utoipa = "=6.0.0"
+utoipa-axum = "=0.3.0"
+
+[workspace]
